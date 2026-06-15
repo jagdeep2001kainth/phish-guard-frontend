@@ -1,121 +1,142 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
 
+const BACKEND_URL = 'http://localhost:8080/api/scan-email'
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [emailText, setEmailText] = useState('')
+  const [result, setResult] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  const handleScan = async () => {
+    if (!emailText.trim()) return
+
+    setLoading(true)
+    setError(null)
+    setResult(null)
+
+    try {
+      const response = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailText })
+      })
+
+      if (!response.ok) throw new Error('Request failed')
+
+      const data = await response.json()
+
+      if (data.error) {
+        setError(data.error)
+      } else {
+        setResult(data)
+      }
+    } catch (err) {
+      setError('Could not connect to the server. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleClear = () => {
+    setEmailText('')
+    setResult(null)
+    setError(null)
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
+      <div className="container">
+        <header className="header">
+          <h1>🛡️ Phish Guard</h1>
+          <p>AI-powered phishing email detection using Random Forest &amp; LSTM models</p>
+        </header>
 
-      <div className="ticks"></div>
+        <div className="card">
+          <label htmlFor="emailText">Paste email content</label>
+          <textarea
+            id="emailText"
+            value={emailText}
+            onChange={(e) => setEmailText(e.target.value)}
+            placeholder="Paste the full email text here..."
+            rows={10}
+          />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          <div className="actions">
+            <button onClick={handleScan} disabled={loading || !emailText.trim()}>
+              {loading ? 'Scanning...' : 'Scan Email'}
+            </button>
+            <button className="secondary" onClick={handleClear} disabled={loading}>
+              Clear
+            </button>
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        {error && (
+          <div className="card error-card">
+            <p>{error}</p>
+          </div>
+        )}
+
+        {result && (
+          <div className={`card result-card ${result.prediction === 'Phishing' ? 'danger' : 'safe'}`}>
+            <div className="result-header">
+              <span className="badge">{result.prediction}</span>
+            </div>
+
+            <div className="probability-bars">
+              <div className="bar-row">
+                <span>Phishing</span>
+                <div className="bar-track">
+                  <div
+                    className="bar-fill phishing"
+                    style={{ width: `${result.phishing_probability}%` }}
+                  />
+                </div>
+                <span>{result.phishing_probability}%</span>
+              </div>
+
+              <div className="bar-row">
+                <span>Safe</span>
+                <div className="bar-track">
+                  <div
+                    className="bar-fill safe"
+                    style={{ width: `${result.safe_probability}%` }}
+                  />
+                </div>
+                <span>{result.safe_probability}%</span>
+              </div>
+            </div>
+
+            <div className="reason">
+              <strong>Analysis:</strong> {result.reason}
+            </div>
+          </div>
+        )}
+        <section className="showcase-section">
+  <div className="showcase-text">
+    <h2>AI-Powered Threat Detection</h2>
+    <p>
+      Built with React, Spring Boot, Flask, Random Forest, and LSTM models,
+      Phish Guard analyzes suspicious emails and provides confidence scores
+      for phishing detection.
+    </p>
+  </div>
+
+  <img
+    src="https://res.cloudinary.com/dlzb0kfc7/image/upload/q_auto/f_auto/v1781490671/Image_odxx86.webp"
+    alt="Phish Guard"
+    className="showcase-image"
+  />
+</section>
+
+        <footer className="footer">
+          <p>Built with React, Spring Boot, Flask, Random Forest &amp; LSTM</p>
+        </footer>
+      </div>
+      
+    </div>
   )
 }
 
