@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 
-const BACKEND_URL = 'http://localhost:8080/api/scan-email'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function App() {
   const [emailText, setEmailText] = useState('')
