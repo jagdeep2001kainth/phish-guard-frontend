@@ -5,7 +5,7 @@
 A full-stack, production-deployed phishing email detection system powered by Machine Learning.
 Paste any email content and get an instant AI-powered verdict with confidence scores.
 
-🔗 **Live Demo:** [phish-guard-frontend.vercel.app](https://phish-guard-frontend.vercel.app)
+🔗 **Live Demo:** [phish-guard-frontend.vercel.app](https://phish-guard-frontend-chi.vercel.app/)
 
 ---
 
