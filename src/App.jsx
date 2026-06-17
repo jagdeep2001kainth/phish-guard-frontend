@@ -8,6 +8,7 @@ function App() {
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [slowResponse, setSlowResponse] = useState(false)
 
   const handleScan = async () => {
     if (!emailText.trim()) return
@@ -15,6 +16,9 @@ function App() {
     setLoading(true)
     setError(null)
     setResult(null)
+    setSlowResponse(false)
+
+    const slowTimer = setTimeout(() => setSlowResponse(true), 5000)
 
     try {
       const response = await fetch(BACKEND_URL, {
@@ -35,7 +39,9 @@ function App() {
     } catch (err) {
       setError('Could not connect to the server. Please try again.')
     } finally {
+      clearTimeout(slowTimer)
       setLoading(false)
+      setSlowResponse(false)
     }
   }
 
@@ -43,6 +49,7 @@ function App() {
     setEmailText('')
     setResult(null)
     setError(null)
+    setSlowResponse(false)
   }
 
   return (
@@ -71,6 +78,12 @@ function App() {
               Clear
             </button>
           </div>
+
+          {slowResponse && (
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.75rem', textAlign: 'center' }}>
+              ⏳ Server is waking up, this may take 30-60 seconds on first request...
+            </p>
+          )}
         </div>
 
         {error && (
@@ -114,28 +127,27 @@ function App() {
             </div>
           </div>
         )}
-        <section className="showcase-section">
-  <div className="showcase-text">
-    <h2>AI-Powered Threat Detection</h2>
-    <p>
-      Built with React, Spring Boot, Flask, Random Forest, and LSTM models,
-      Phish Guard analyzes suspicious emails and provides confidence scores
-      for phishing detection.
-    </p>
-  </div>
 
-  <img
-    src="https://res.cloudinary.com/dlzb0kfc7/image/upload/q_auto/f_auto/v1781490671/Image_odxx86.webp"
-    alt="Phish Guard"
-    className="showcase-image"
-  />
-</section>
+        <section className="showcase-section">
+          <div className="showcase-text">
+            <h2>AI-Powered Threat Detection</h2>
+            <p>
+              Built with React, Spring Boot, Flask, Random Forest, and LSTM models,
+              Phish Guard analyzes suspicious emails and provides confidence scores
+              for phishing detection.
+            </p>
+          </div>
+          <img
+            src="https://res.cloudinary.com/dlzb0kfc7/image/upload/q_auto/f_auto/v1781490671/Image_odxx86.webp"
+            alt="Phish Guard"
+            className="showcase-image"
+          />
+        </section>
 
         <footer className="footer">
           <p>Built with React, Spring Boot, Flask, Random Forest &amp; LSTM</p>
         </footer>
       </div>
-      
     </div>
   )
 }
