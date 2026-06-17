@@ -57,7 +57,7 @@ function App() {
       <div className="container">
         <header className="header">
           <h1>🛡️ Phish Guard</h1>
-          <p>AI-powered phishing email detection using Random Forest &amp; LSTM models</p>
+          <p>AI-powered phishing email detection using Random Forest model</p>
         </header>
 
         <div className="card">
@@ -132,7 +132,7 @@ function App() {
           <div className="showcase-text">
             <h2>AI-Powered Threat Detection</h2>
             <p>
-              Built with React, Spring Boot, Flask, Random Forest, and LSTM models,
+              Built with React, Spring Boot, Flask, Random Forest model,
               Phish Guard analyzes suspicious emails and provides confidence scores
               for phishing detection.
             </p>
@@ -145,7 +145,7 @@ function App() {
         </section>
 
         <footer className="footer">
-          <p>Built with React, Spring Boot, Flask, Random Forest &amp; LSTM</p>
+          <p>Built with React, Spring Boot, Flask, Random Forest</p>
         </footer>
       </div>
     </div>
