@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = 'https://phish-guard-backend.onrender.com/api/scan-email'
 
 function App() {
   const [emailText, setEmailText] = useState('')
