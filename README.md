@@ -5,7 +5,7 @@
 A full-stack, production-deployed phishing email detection system powered by Machine Learning.
 Paste any email content and get an instant AI-powered verdict with confidence scores.
 
-🔗 **Live Demo:** [phish-guard-frontend.vercel.app](https://phish-guard-frontend-chi.vercel.app/)
+🔗 **Live Demo:** [phish-guard](https://phish-guard-frontend-chi.vercel.app/)
 
 ---
 
@@ -100,6 +100,6 @@ Threshold: > 70% probability = Phishing verdict
 ## 👨‍💻 Author
 
 **Jagdeep Kainth**
-- GitHub: [@jagdeep2001kainth](https://github.com/jagdeep2001kainth)
-- LinkedIn: [kainthjagdeep](https://www.linkedin.com/in/kainthjagdeep/)
-- LeetCode: [leetcode.com/u/JagdeepKainth](https://leetcode.com/u/jagdeepkainth/)
+- GitHub: [https://github.com/jagdeep2001kainth](https://github.com/jagdeep2001kainth)
+- LinkedIn: [https://www.linkedin.com/in/kainthjagdeep/](https://www.linkedin.com/in/kainthjagdeep/)
+- LeetCode: [https://leetcode.com/u/jagdeepkainth/](https://leetcode.com/u/jagdeepkainth/)
